@@ -1,0 +1,52 @@
+
+server:
+  #端口
+  port: 8081
+
+spring:
+  # 数据源配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/yeb?characterEncoding=utf-8&useSSL=false&serverTimezone=Hongkong
+    username: root
+    password: "001020"
+    druid:
+      #最小空闲连接数
+      min-idle: 5
+      # 最大连接数
+      max-active: 10
+      # 连接超时事件
+      max-wait: 60000
+      #自动提交
+      default-auto-commit: true
+      #连接检测
+      validationQuery: SELECT 1 FROM DUAL
+      # 空间检查
+      timeBetweenEvictionRunsMillis: 60000
+      # 空闲检查
+      minEvictableIdleTimeMillis: 300000
+
+#mybatis plus 配置
+mybatis-plus:
+  #自动别名
+  type-aliases-package: com.chen.server.pojo
+  configuration:
+    #关闭自动驼峰命名
+    map-underscore-to-camel-case: false
+
+#sql打印
+logging:
+  level:
+    com.chen.server.mapper: debug
+
+jwt:
+  #JWT 存储的请求头
+  tokenHeader: Authorization
+  #JWT 加密密钥
+  secret: yeb-secret
+  #JWT 超时过期事件
+  expiration: 604800
+  #JWT 负载中拿到开头
+  tokenHead: Bearer
+
+
