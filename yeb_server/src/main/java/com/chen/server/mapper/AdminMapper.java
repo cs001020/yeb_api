@@ -2,6 +2,9 @@ package com.chen.server.mapper;
 
 import com.chen.server.pojo.Admin;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.chen.server.pojo.Menu;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,4 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2022-09-29
  */
 public interface AdminMapper extends BaseMapper<Admin> {
-
 }

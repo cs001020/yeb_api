@@ -1,5 +1,7 @@
 package com.chen.server.pojo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,9 +15,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ApiModel(value ="统一响应结果",description = "")
 public class Results {
+    @ApiModelProperty(value = "响应码")
     private Integer code;
+    @ApiModelProperty(value = "信息")
     private String message;
+    @ApiModelProperty(value = "数据")
     private Object data;
 
     /**

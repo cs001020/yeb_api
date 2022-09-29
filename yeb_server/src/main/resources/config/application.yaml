@@ -7,7 +7,7 @@ spring:
   # 数据源配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/yeb?characterEncoding=utf-8&useSSL=false&serverTimezone=Hongkong
+    url: jdbc:mysql://localhost:3306/yeb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
     username: root
     password: "001020"
     druid:
@@ -26,11 +26,17 @@ spring:
       # 空闲检查
       minEvictableIdleTimeMillis: 300000
 
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
 #mybatis plus 配置
 mybatis-plus:
   #自动别名
   type-aliases-package: com.chen.server.pojo
   configuration:
+    #日志实现类
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     #关闭自动驼峰命名
     map-underscore-to-camel-case: false
 
