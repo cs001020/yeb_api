@@ -52,7 +52,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
      *
      * @param username 用户名
      * @param password 密码
-     * @param code
+     * @param code 验证码
      * @param request  请求
      * @return {@link Results}
      */
