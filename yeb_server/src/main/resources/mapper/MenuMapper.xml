@@ -60,7 +60,5 @@
             ar.adminId=#{id}
           AND
             m2.enabled=TRUE
-        ORDER BY
-            m2.id
     </select>
 </mapper>
