@@ -5,7 +5,6 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 
-import javax.annotation.security.DeclareRoles;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -27,7 +26,6 @@ public class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
 
     @Override
     public byte[] serialize(T t) throws SerializationException {
-        System.out.println("111");
         if (null == t) {
             return new byte[0];
         }
@@ -36,7 +34,6 @@ public class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
 
     @Override
     public T deserialize(byte[] bytes) throws SerializationException {
-        System.out.println("111");
         if (null == bytes || bytes.length <= 0) {
             return null;
         }
