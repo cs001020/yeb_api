@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.chen.server.pojo.Admin;
 import com.chen.server.pojo.Menu;
 import com.chen.server.mapper.MenuMapper;
+import com.chen.server.pojo.Role;
 import com.chen.server.service.MenuService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ import java.util.List;
 @Service
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
     @Autowired
-    private RedisTemplate  redisTemplate;
+    private RedisTemplate<String,Object>  redisTemplate;
 
     @Override
     public List<Menu> getMenuListByAdminId() {
@@ -38,6 +39,16 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
             valueOperations.set("menus:" + adminId,menus);
         }
         return menus;
+    }
+
+    /**
+     * 获取菜单和角色列表
+     *
+     * @return {@link List}<{@link Role}>
+     */
+    @Override
+    public List<Menu> getMenuListWithRoles() {
+        return baseMapper.getMenuListWithRoles();
     }
 
 }

@@ -4,18 +4,23 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.chen.server.mapper.AdminMapper;
 import com.chen.server.pojo.Admin;
 import com.chen.server.service.AdminService;
+import com.chen.server.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.annotation.Resource;
@@ -27,15 +32,21 @@ import javax.annotation.Resource;
  * @date 2022/09/29
  */
 @Configuration
-public class SecurityConfig {
+public class SecurityConfig{
     @Resource
     private AdminMapper adminMapper;
+    @Autowired
+    private RoleService roleService;
     @Autowired
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
     @Autowired
     private RestfulAccessDeniedHandler restfulAccessDeniedHandler;
     @Autowired
     private RestAuthorizationEntryPoint restAuthorizationEntryPoint;
+    @Autowired
+    private CustomFilter customFilter;
+    @Autowired
+    private CustomUrlDecisionManager customUrlDecisionManager;
 
 
     @Bean
@@ -49,8 +60,6 @@ public class SecurityConfig {
                 //允许登陆访问
                 .antMatchers("/login","/captcha").permitAll()
                 //放行静态资源
-                .and()
-                .authorizeRequests()
                 .antMatchers("/css/**",
                         "/js/**",
                         "/index.html",
@@ -59,9 +68,18 @@ public class SecurityConfig {
                         "/webjars/**",
                         "/swagger-resources/**",
                         "/v2/api-docs/**").permitAll()
-                //除了登陆请求都需要认证
+                //除了以上请求都需要认证
                 .anyRequest()
                 .authenticated()
+                //动态权限配置
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O object) {
+                        object.setAccessDecisionManager(customUrlDecisionManager);
+                        object.setSecurityMetadataSource(customFilter);
+                        return object;
+                    }
+                })
                 .and()
                 //禁用缓存
                 .headers()
@@ -84,9 +102,10 @@ public class SecurityConfig {
                     .eq(Admin::getUsername, username).
                     eq(Admin::getEnabled, true));
             if (null != admin) {
+                admin.setRoles(roleService.getRolesByAdminId(admin.getId()));
                 return admin;
             }
-            return null;
+            throw new UsernameNotFoundException("用户名或者密码错误");
         };
     }
 

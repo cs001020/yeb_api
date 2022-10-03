@@ -5,10 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.chen.server.config.security.JwtTokenUtil;
 import com.chen.server.pojo.Admin;
 import com.chen.server.mapper.AdminMapper;
-import com.chen.server.pojo.Menu;
 import com.chen.server.pojo.Results;
+import com.chen.server.pojo.Role;
 import com.chen.server.service.AdminService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.chen.server.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,6 +43,8 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private AdminMapper adminMapper;
+    @Autowired
+    private RoleService roleService;
     @Value("${jwt.tokenHeader}")
     private String tokenHeader;
     @Value("${jwt.tokenHead}")
@@ -92,15 +95,14 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
      * @return {@link Admin}
      */
     @Override
-    public Results getAdminByUserName(String username) {
-        Admin admin = adminMapper.selectOne(new LambdaQueryWrapper<Admin>()
+    public Admin getAdminByUserName(String username) {
+        return adminMapper.selectOne(new LambdaQueryWrapper<Admin>()
                 .eq(Admin::getUsername, username).
                 eq(Admin::getEnabled, true));
-        if (null!=admin){
-            admin.setPassword(null);
-            return Results.success("查询成功",admin);
-        }
-        return Results.error("用户不存在");
     }
 
+    @Override
+    public List<Role> getRolesByAdminId(Integer adminId) {
+        return roleService.getRolesByAdminId(adminId);
+    }
 }

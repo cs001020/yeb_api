@@ -1,11 +1,10 @@
 package com.chen.server.config.redis;
 
-import org.springframework.beans.factory.annotation.Configurable;
+import com.alibaba.fastjson2.support.spring.data.redis.FastJsonRedisSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
@@ -19,7 +18,7 @@ public class RedisConfig {
     @Bean
     public RedisTemplate<String,Object> redisTemplate(RedisConnectionFactory redisConnectionFactory){
         RedisTemplate<String,Object> redisTemplate=new RedisTemplate<>();
-        FastJsonRedisSerializer serializer = new FastJsonRedisSerializer(Object.class);
+        FastJsonRedisSerializer<Object> serializer = new FastJsonRedisSerializer<>(Object.class);
         //设置String类型key序列化气
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         //设置String类型value序列化气

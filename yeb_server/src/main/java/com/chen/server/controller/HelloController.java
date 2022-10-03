@@ -14,10 +14,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 public class HelloController {
-    @ApiOperation(value = "Hello测试接口")
+    @ApiOperation(value = "Hello测试接口1")
     @GetMapping("/hello")
-    public String hello(){
+    public String hello1(){
         log.info("线程测试");
         return "hello";
+    }
+
+    @ApiOperation(value = "Hello测试接口2")
+    @GetMapping("/employee/basic/**")
+    public String hello2(){
+        return "/employee/basic/**";
+    }
+    @ApiOperation(value = "Hello测试接口3")
+    @GetMapping("/employee/advanced/**")
+    public String hello3(){
+        return "/employee/advanced/**";
     }
 }

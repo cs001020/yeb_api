@@ -2,6 +2,7 @@ package com.chen.server.mapper;
 
 import com.chen.server.pojo.Menu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.chen.server.pojo.Role;
 
 import java.util.List;
 
@@ -23,4 +24,11 @@ public interface MenuMapper extends BaseMapper<Menu> {
      */
     List<Menu> getMenusByAdminId(Integer id);
 
+
+    /**
+     * 获取菜单和角色列表
+     *
+     * @return {@link List}<{@link Menu}>
+     */
+    List<Menu> getMenuListWithRoles();
 }

@@ -2,8 +2,8 @@ package com.chen.server.service;
 
 import com.chen.server.pojo.Admin;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.chen.server.pojo.Menu;
 import com.chen.server.pojo.Results;
+import com.chen.server.pojo.Role;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -35,6 +35,14 @@ public interface AdminService extends IService<Admin> {
      * @param username 用户名
      * @return {@link Admin}
      */
-    Results getAdminByUserName(String username);
+    Admin getAdminByUserName(String username);
+
+    /**
+     * 根据用户id获取角色列表
+     *
+     * @param adminId 管理员id
+     * @return {@link List}<{@link Role}>
+     */
+    List<Role> getRolesByAdminId(Integer adminId);
 
 }

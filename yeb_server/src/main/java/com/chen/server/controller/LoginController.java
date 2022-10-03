@@ -40,7 +40,13 @@ public class LoginController {
             return Results.error("非法请求");
         }
         String username = principal.getName();
-        return adminService.getAdminByUserName(username);
+        Admin loginUser = adminService.getAdminByUserName(username);
+        if (loginUser!=null){
+            loginUser.setPassword(null);
+            loginUser.setRoles(adminService.getRolesByAdminId(loginUser.getId()));
+            return Results.success("success",loginUser);
+        }
+        return Results.error("错误请求");
     }
 
     @ApiOperation(value = "退出登陆")

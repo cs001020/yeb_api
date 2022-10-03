@@ -31,34 +31,43 @@
         </collection>
     </resultMap>
 
-    <select id="getMenusByAdminId" resultMap="Menus">
-        SELECT DISTINCT
-            m1.*,
-            m2.id         as id2,
-            m2.url        as url2,
-            m2.path       as path2,
-            m2.component  as component2,
-            m2.name       as name2,
-            m2.iconCls  as iconCls2,
-            m2.keepAlive as keepAlive2,
-            m2.requireAuth requireAuth2,
-            m2.parentId  as parentId2,
-            m2.enabled    as enabled2
+    <resultMap id="MenusWithRoles" type="Menu" extends="BaseResultMap">
+        <collection property="roles" ofType="role">
+            <id column="rid" property="id"/>
+            <result column="rname" property="name"/>
+            <result column="rnameZh" property="namezh"/>
+        </collection>
+    </resultMap>
 
-        FROM
-            t_menu m1,
-            t_menu m2,
-            t_admin_role ar,
-            t_menu_role mr
-        WHERE
-            m1.id =m2.parentId
-          AND
-            m2.id = mr.mid
-          AND
-            mr.rid=ar.rid
-          AND
-            ar.adminId=#{id}
-          AND
-            m2.enabled=TRUE
+    <select id="getMenusByAdminId" resultMap="Menus">
+        SELECT DISTINCT m1.*,
+                        m2.id        as id2,
+                        m2.url       as url2,
+                        m2.path      as path2,
+                        m2.component as component2,
+                        m2.name      as name2,
+                        m2.iconCls   as iconCls2,
+                        m2.keepAlive as keepAlive2,
+                        m2.requireAuth  requireAuth2,
+                        m2.parentId  as parentId2,
+                        m2.enabled   as enabled2
+
+        FROM t_menu m1,
+             t_menu m2,
+             t_admin_role ar,
+             t_menu_role mr
+        WHERE m1.id = m2.parentId
+          AND m2.id = mr.mid
+          AND mr.rid = ar.rid
+          AND ar.adminId = #{id}
+          AND m2.enabled = TRUE
+    </select>
+
+    <select id="getMenuListWithRoles" resultMap="MenusWithRoles">
+        select distinct t_menu.*, tr.id rid, tr.name rname, nameZh rnameZh
+        from t_menu
+                 join t_menu_role tmr on t_menu.id = tmr.mid
+                 join t_role tr on tr.id = tmr.rid
+        order by t_menu.id
     </select>
 </mapper>
