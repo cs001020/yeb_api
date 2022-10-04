@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,7 +33,7 @@ import javax.annotation.Resource;
  * @date 2022/09/29
  */
 @Configuration
-public class SecurityConfig{
+public class SecurityConfig {
     @Resource
     private AdminMapper adminMapper;
     @Autowired
@@ -48,6 +49,22 @@ public class SecurityConfig{
     @Autowired
     private CustomUrlDecisionManager customUrlDecisionManager;
 
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        //放行静态资源 登陆接口 验证码接口
+        return (web) -> web.ignoring().antMatchers(
+                "/css/**",
+                "/js/**",
+                "/index.html",
+                "favicon.ico",
+                "/doc.html/**",
+                "/webjars/**",
+                "/swagger-resources/**",
+                "/v2/api-docs/**",
+                "/login",
+                "/captcha");
+    }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -57,21 +74,10 @@ public class SecurityConfig{
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                //允许登陆访问
-                .antMatchers("/login","/captcha").permitAll()
-                //放行静态资源
-                .antMatchers("/css/**",
-                        "/js/**",
-                        "/index.html",
-                        "favicon.ico",
-                        "/doc.html",
-                        "/webjars/**",
-                        "/swagger-resources/**",
-                        "/v2/api-docs/**").permitAll()
-                //除了以上请求都需要认证
+                // 所有请求都要求认证
                 .anyRequest()
                 .authenticated()
-                //动态权限配置
+                // 动态权限配置
                 .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
                     @Override
                     public <O extends FilterSecurityInterceptor> O postProcess(O object) {
