@@ -30,4 +30,12 @@ public interface MenuService extends IService<Menu> {
      * @return {@link List}<{@link Role}>
      */
     List<Menu> getMenuListWithRoles();
+
+    /**
+     * 获取所有菜单
+     *
+     * @return {@link List}<{@link Menu}>
+     */
+    List<Menu> getAllMenus();
+
 }

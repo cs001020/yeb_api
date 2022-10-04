@@ -2,4 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chen.server.mapper.MenuRoleMapper">
 
+    <insert id="batchAdd">
+        insert into t_menu_role(mid, rid) value
+            <foreach collection="mids" item="mid" separator=",">
+                (#{mid},#{rid})
+            </foreach>
+    </insert>
 </mapper>

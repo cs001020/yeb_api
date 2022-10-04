@@ -38,6 +38,18 @@
             <result column="rnameZh" property="namezh"/>
         </collection>
     </resultMap>
+    <resultMap id="MenusWithChildren" type="menu" extends="BaseResultMap">
+        <id column="id1" property="id"/>
+        <result column="name1" property="name"/>
+        <collection property="children" ofType="menu">
+            <id column="id2" property="id"/>
+            <result column="name2" property="name"/>
+            <collection property="children" ofType="menu">
+                <id column="id3" property="id"/>
+                <result column="name3" property="name"/>
+            </collection>
+        </collection>
+    </resultMap>
 
     <select id="getMenusByAdminId" resultMap="Menus">
         SELECT DISTINCT m1.*,
@@ -69,5 +81,19 @@
                  join t_menu_role tmr on t_menu.id = tmr.mid
                  join t_role tr on tr.id = tmr.rid
         order by t_menu.id
+    </select>
+    <select id="getAllMenus" resultMap="MenusWithChildren">
+        select m1.id   id1,
+               m1.name name1,
+               m2.id   id2,
+               m2.name name2,
+               m3.id   id3,
+               m3.name name3
+        from t_menu m1,
+             t_menu m2,
+             t_menu m3
+        where m1.id = m2.parentId
+          and m2.id = m3.parentId
+          and m3.enabled = true
     </select>
 </mapper>

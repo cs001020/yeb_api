@@ -9,6 +9,7 @@ import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 
 import java.util.Collection;
 import java.util.List;
@@ -23,6 +24,8 @@ import java.util.List;
 public class CustomFilter implements FilterInvocationSecurityMetadataSource {
     @Autowired
     private MenuService menuService;
+
+    AntPathMatcher antPathMatcher = new AntPathMatcher();
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
         //获取请求url
@@ -30,7 +33,7 @@ public class CustomFilter implements FilterInvocationSecurityMetadataSource {
         List<Menu> menuListWithRoles = menuService.getMenuListWithRoles();
         for (Menu menu : menuListWithRoles) {
             //判断请求url与菜单时候匹配
-            if (menu.getUrl().equals(requestUrl)){
+            if (antPathMatcher.match(menu.getUrl(),requestUrl)){
                 String[] strings = menu.getRoles().stream().map(Role::getName).toArray(String[]::new);
                 return SecurityConfig.createList(strings);
             }

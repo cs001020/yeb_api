@@ -13,4 +13,12 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface MenuRoleService extends IService<MenuRole> {
 
+    /**
+     * 更新角色菜单
+     *
+     * @param rid  掉
+     * @param mids mids
+     * @return boolean
+     */
+    boolean updateRoleMenu(Integer rid, Integer[] mids);
 }
